@@ -632,9 +632,9 @@ sub get_supported_ssh_algorithms_list {
             foreach (@{$fnret->value->{'stdout'} || []}, @{$fnret->value->{'stderr'} || []}) {
                 if (/OpenSSH_(\d+\.\d+)/) {
                     my $version = $1;
-                    push @supportedList, 'ecdsa'   if ($version gt "5.7");
-                    push @supportedList, 'ed25519' if ($version gt "6.5");
-                    push @supportedList, 'ecdsa-sk' if ($version gt "8.2");
+                    push @supportedList, 'ecdsa'      if ($version gt "5.7");
+                    push @supportedList, 'ed25519'    if ($version gt "6.5");
+                    push @supportedList, 'ecdsa-sk'   if ($version gt "8.2");
                     push @supportedList, 'ed25519-sk' if ($version gt "8.2");
                     @cached_runtime_list = @supportedList;
                     last;
@@ -1050,29 +1050,30 @@ sub is_effective_piv_account_policy_enabled {
 
 # Deduces from the bastion config what algorithms are accepted.
 sub print_accepted_key_algorithms {
-    my %params  = @_;
-    my $way = $params{'way'};
+    my %params = @_;
+    my $way    = $params{'way'};
     my $fnret;
 
     $fnret = OVH::Bastion::get_supported_ssh_algorithms_list(way => $way);
-    $fnret or osh_exit $fnret;
+    $fnret or return $fnret;
     my @algoList = @{$fnret->value};
 
     if (grep { 'ed25519-sk' eq $_ } @algoList) {
-        osh_info "FIDO2 Ed25519: strongness[######] speed[#####], use `ssh-keygen -t ed25519-sk' to generate one";
+        osh_info("FIDO2 Ed25519: strongness[######] speed[#####], use `ssh-keygen -t ed25519-sk' to generate one");
     }
     if (grep { 'ed25519' eq $_ } @algoList) {
-        osh_info "ED25519      : strongness[#####.] speed[#####], use `ssh-keygen -t ed25519' to generate one";
+        osh_info("ED25519      : strongness[#####.] speed[#####], use `ssh-keygen -t ed25519' to generate one");
     }
     if (grep { 'ecdsa-sk' eq $_ } @algoList) {
-        osh_info "FIDO2 ECDSA  : strongness[#####.] speed[#####], use `ssh-keygen -t ecdsa-sk -b 521' to generate one";
+        osh_info("FIDO2 ECDSA  : strongness[#####.] speed[#####], use `ssh-keygen -t ecdsa-sk -b 521' to generate one");
     }
     if (grep { 'ecdsa' eq $_ } @algoList) {
-        osh_info "ECDSA        : strongness[####..] speed[#####], use `ssh-keygen -t ecdsa -b 521' to generate one";
+        osh_info("ECDSA        : strongness[####..] speed[#####], use `ssh-keygen -t ecdsa -b 521' to generate one");
     }
     if (grep { 'rsa' eq $_ } @algoList) {
-        osh_info "RSA          : strongness[###...] speed[#....], use `ssh-keygen -t rsa -b 4096' to generate one";
+        osh_info("RSA          : strongness[###...] speed[#....], use `ssh-keygen -t rsa -b 4096' to generate one");
     }
+    return $fnret;
 }
 
 1;
