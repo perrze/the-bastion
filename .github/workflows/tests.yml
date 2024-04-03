@@ -1,8 +1,6 @@
 name: Linux distros tests
 
-on:
-    pull_request:
-        types: [labeled, synchronize]
+on: [push, pull_request]
 
 jobs:
     tests_short:
