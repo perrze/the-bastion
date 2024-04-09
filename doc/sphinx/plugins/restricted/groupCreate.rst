@@ -2,58 +2,32 @@
 groupCreate
 ============
 
-Create a group
-==============
+Usage       : --osh groupCreate --group GROUP --owner ACCOUNT --algo ed25519 [--encrypted] [--no-key]
+=====================================================================================================
 
+Description : creates group GROUP on the bastion with ACCOUNT as the owner
+Params      :
 
-.. admonition:: usage
-   :class: cmdusage
+    --group       Group name to create
 
-   --osh groupCreate --group GROUP --owner ACCOUNT <--algo ALGO --size SIZE [--encrypted]|--no-key>
+    --owner       Preexisting bastion account to assign as owner (can be you)
 
-.. program:: groupCreate
-
-
-.. option:: --group
-
-   Group name to create
-
-
-.. option:: --owner
-
-   Preexisting bastion account to assign as owner (can be you)
-
-
-.. option:: --encrypted
-
-   Add a passphrase to the key. Beware that you'll have to enter it for each use.
-
+    --encrypted   Add a passphrase to the key. Beware that you'll have to enter it for each use.
                   Do NOT add the passphrase after this option, you'll be prompted interactively for it.
 
-.. option:: --algo
-
-   Specifies the algo of the key, either rsa, ecdsa or ed25519.
-
-.. option:: --size
-
-   Specifies the size of the key to be generated.
-
+    --algo        Specifies the algo of the key, either rsa, ecdsa or ed25519.
+    --size        Specifies the size of the key to be generated.
                   For RSA, choose between 2048 and 8192 (4096 is good).
                   For ECDSA, choose either 256, 384 or 521.
                   For ED25519, size is always 256.
 
-.. option:: --no-key
+    --no-key      Don't generate an egress SSH key at all for this group
 
-   Don't generate an egress SSH key at all for this group
+With the policy and SSH version on this bastion,
+the following algorithms are supported: RSA ECDSA ED25519
 
-
-A quick overview of the different algorithms:
-
-.. code-block:: none
-
-   Ed25519      : robustness[###] speed[###]
-   ECDSA        : robustness[##.] speed[###]
-   RSA          : robustness[#..] speed[#..]
-
-This table is meant as a quick cheat-sheet, you're warmly advised to do
-your own research, as other constraints may apply to your environment.
+algo    size  strength   speed    compatibility
+------- ----  ---------- -------- -----------------------
+RSA     4096  good       slow     works everywhere
+ECDSA    521  strong     fast     debian7+ (OpenSSH 5.7+)
+ED25519  256  verystrong veryfast debian8+ (OpenSSH 6.5+)

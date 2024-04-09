@@ -33,13 +33,13 @@ Create a new public + private key pair on your bastion account
 
 
 
-A quick overview of the different algorithms:
+Note that the actually available algorithms on a bastion depend on the underlying OS and the configured policy.
 
-.. code-block:: none
+A quick overview of the different algorithms::
 
-   Ed25519      : robustness[###] speed[###]
-   ECDSA        : robustness[##.] speed[###]
-   RSA          : robustness[#..] speed[#..]
+Ed25519      : robustness[✓✓✓] speed[✓✓✓], generate: `ssh-keygen -t ed25519'
+ECDSA        : robustness[✓✓ ] speed[✓✓✓], generate: `ssh-keygen -t ecdsa -b 521'
+RSA          : robustness[✓  ] speed[✓  ], generate: `ssh-keygen -t rsa -b 4096'
 
 This table is meant as a quick cheat-sheet, you're warmly advised to do
 your own research, as other constraints may apply to your environment.
